@@ -35,6 +35,7 @@ impl Drop for Context {
         }
     }
 } 
+
 pub struct Hypergraph {
     vertices: usize,
     blocks: sys::kahypar_partition_id_t,
@@ -88,7 +89,7 @@ impl Hypergraph {
         }
     }
 
-    pub fn partition(&mut self, context: &mut Context, epsilon: f64) -> (i32, Vec<usize>) {
+    pub fn partition(&mut self, context: &mut Context, epsilon: f64) -> (i32, Vec<i32>) {
         let mut objective: sys::kahypar_hyperedge_weight_t = 0;
         let mut partition = vec![-1 as sys::kahypar_partition_id_t; self.vertices];
 
@@ -100,10 +101,10 @@ impl Hypergraph {
             );
         }
 
-        (objective as i32, partition.into_iter().map(|i| i as usize).collect())
+        (objective as i32, partition)
     }
 
-    pub fn improve_partition(&mut self, context: &mut Context, epsilon: f64, previous: &[i32], iterations: usize) -> (i32, Vec<usize>) {
+    pub fn improve_partition(&mut self, context: &mut Context, epsilon: f64, previous: &[i32], iterations: usize) -> (i32, Vec<i32>) {
         let mut objective: sys::kahypar_hyperedge_weight_t = 0;
         let mut partition = vec![-1 as sys::kahypar_partition_id_t; self.vertices];
 
@@ -116,7 +117,7 @@ impl Hypergraph {
             );
         }
 
-        (objective as i32, partition.into_iter().map(|i| i as usize).collect())
+        (objective as i32, partition)
     }
 }
 
